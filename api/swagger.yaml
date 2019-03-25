@@ -1,0 +1,490 @@
+---
+swagger: "2.0"
+info:
+  description: "Api to handle news articles publish to website"
+  version: "1.0.0"
+  title: "News"
+  contact:
+    email: "amit.ramsakal@gmail.com"
+host: "localhost:8080"
+basePath: "/"
+schemes:
+- "http"
+paths:
+  /news:
+    post:
+      tags:
+      - "news"
+      summary: "Add a new news to publish"
+      description: ""
+      operationId: "addNewsItem"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "access_token"
+        in: "header"
+        required: true
+        type: "string"   
+      - in: "body"
+        name: "body"
+        description: "Create a new news item to publish on website"
+        required: false
+        schema:
+          $ref: "#/definitions/News"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+        - JWT: []
+      x-swagger-router-controller: "News"
+  /news/sortedNews/{sortType}:
+    get:
+      tags:
+      - "news"
+      summary: "Finds News by Id"
+      description: "Returns a single news"
+      operationId: "getAllNewsItems"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "access_token"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "sortType"
+        in: "path"
+        description: "ID of News to return"
+        required: true
+        type: "integer"
+        format: "int64"  
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"  
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "News not found"
+
+      security:
+      - JWT: []
+      x-swagger-router-controller: "News"    
+  /news/{newsId}:
+    get:
+      tags:
+      - "news"
+      summary: "Finds News by Id"
+      description: "Returns a single news"
+      operationId: "getNewsById"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "access_token"
+        in: "header"
+        required: false
+        type: "string"  
+      - name: "newsId"
+        in: "path"
+        description: "ID of News to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "successful operation"  
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "News not found"
+      security:
+      - JWT: []
+      x-swagger-router-controller: "News"
+    put:
+      tags:
+      - "news"
+      summary: "Update an existing News item"
+      description: ""
+      operationId: "updateNewsItem"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "access_token"
+        in: "header"
+        required: true
+        type: "string"   
+      - name: "newsId"
+        in: "path"
+        description: "newsId that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated news object"
+        required: true
+        schema:
+          $ref: "#/definitions/News"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "News not found"
+        405:
+          description: "Validation exception"
+      security:
+        - JWT: []    
+      x-swagger-router-controller: "News"
+    delete:
+      tags:
+      - "news"
+      summary: "Deletes a news"
+      description: ""
+      operationId: "deleteNewsItem"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "access_token"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "newsId"
+        in: "path"
+        description: "News id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "News not found"
+      security:
+        - JWT: []    
+      x-swagger-router-controller: "News"
+  /user:
+    post:
+      tags:
+      - "user"
+      summary: "Add a new user"
+      description: "Add new user"
+      operationId: "createNewUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      - "application/xml"
+      - "text/plain"
+      parameters:
+      - name: "access_token"
+        in: "header"
+        required: false
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Create a new user"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        400:
+          description: "Invalid input"
+        200:
+          description: "Success" 
+      security:
+        - JWT: []    
+      x-swagger-router-controller: "User"
+  /user/createWithArray:
+    post:
+      tags:
+      - "user"
+      summary: "Creates list of users with given input array"
+      description: ""
+      operationId: "createUsersWithArrayInput"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "User"
+  /user/createWithList:
+    post:
+      tags:
+      - "user"
+      summary: "Creates list of users with given input array"
+      description: ""
+      operationId: "createUsersWithListInput"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "User"
+  /user/login:
+    get:
+      tags:
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+          schema:
+            type: "string"
+        400:
+          description: "Invalid username/password supplied"
+      x-swagger-router-controller: "User"
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "User"
+  /user/{username}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user name"
+      description: ""
+      operationId: "getUserByName"
+      produces:
+      - "application/xml"
+      - "application/json"
+      - "text/plain"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be fetched. Use user1 for testing. "
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+      x-swagger-router-controller: "User"
+    put:
+      tags:
+      - "user"
+      summary: "Update user"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      - "text/plain"
+      parameters:
+      - name: "access_token"
+        in: "header"
+        required: false
+        type: "string"  
+      - name: "username"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        400:
+          description: "Invalid user supplied"
+        404:
+          description: "User not found"
+        200:
+          description: "successful"
+      security:
+        - JWT: []    
+      x-swagger-router-controller: "User"
+    delete:
+      tags:
+      - "user"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      - "text/plain"
+      parameters:
+      - name: "access_token"
+        in: "header"
+        required: false
+        type: "string"  
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+        200:
+          description: "successful"    
+      security: 
+        - JWT: []    
+      x-swagger-router-controller: "User"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+  JWT:
+    type: "apiKey"
+    in: "header"
+    name: "access_token"
+definitions:
+  News:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      author:
+        type: "string"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      urlToImage:
+        type: "string"  
+      published_at:
+        type: "string"
+    xml:
+      name: "News"
+    example:
+      author: "Times of India"
+      title: "Election in India"
+      description: "Some election..."
+      urlToImage: "http://localhost:8080/images/info.jpg"
+      published_at: "2000-01-23T04:56:07.000+00:00"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      firstname:
+        type: "string"
+      lastname:
+        type: "string"
+      email:
+        type: "string"
+      username:
+        type: "string"  
+      password:
+        type: "string"
+      user_type:
+        type: "string"
+        description: "User type"
+    xml:
+      name: "User"
+    example:
+      firstName: "firstname"
+      lastName: "lastname"
+      email: "email"
+      username: "username"
+      password: "password"
+      user_type: "admin"
+  Tag:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+    xml:
+      name: "Tag"
+    example:
+      name: "name"
+      id: 1
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      code: 0
+      type: "type"
+      message: "message"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
